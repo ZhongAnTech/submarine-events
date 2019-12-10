@@ -1,0 +1,34 @@
+server:
+  port: 8080
+      
+spring:
+  application:
+    name: submarine-events
+  cloud:
+    #nacos:
+      #config:
+        #server-addr: localhost:80 #your nacos server address
+        #file-extension: yaml
+    stream:
+      default-binder: kafka  
+      kafka:
+        binder:
+          brokers: localhost:9092 #your kafka server address
+      bindings:
+        input:
+          destination: my_topic #your topic
+          group: my_topic_group1 #consumer group of your topic 
+          consumer:
+            concurrency: 4 #concurrent consumer count, default is 1, less than or equal to partition count
+            max-attempts: 5 #max retry count, default is 3
+      function: 
+        definition: restAPIConsume #function to consume message, already implemented stream/handler/EventHandler.java
+
+event-adapter-rules:
+  rule[0]:
+    type: Demo #event type
+    targetUri: http://localhost:8080/v1/demo/toUpperCase #RESTful HTTP API where event is routed to, here is a demo API implemented in demo/TargetUriDemo.java
+    httpMethod: GET #method of RESTful HTTP API
+    requestKeyMap: '{"oriReqName1": "convertedReqName1", "oriReqName2": "convertedReqName2"}' #request key map, not required
+    responseKeyMap: '{"oriRespName1": "convertedRespName1", "oriRespName2":"convertedRespName2"}' #response key map, not required
+  #rule[1]: more rules can be added here

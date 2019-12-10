@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <property name="projectname" value="submarine-events" />
+    <property name="log.dir" value="/log/${projectname}" />
+    <property name="MONITOR_PATTERN" value="%d [%thread] %-5p [%c] [%F:%L] [trace=%X{X-B3-TraceId:-},span=%X{X-B3-SpanId:-},parent=%X{X-B3-ParentSpanId:-}] - %msg%n"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder charset="UTF-8">
+            <pattern>${MONITOR_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <appender name="infoAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.dir}/logs/${HOSTNAME}_app_${projectname}_lt_info.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${HOSTNAME}_app_${projectname}_lt_info_%d{yyyy-MM-dd}.log
+            </fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <pattern>${MONITOR_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <appender name="errorAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.dir}/logs/${HOSTNAME}_app_${projectname}_lt_error.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.dir}/logs/${HOSTNAME}_app_${projectname}_lt_error_%d{yyyy-MM-dd}.log
+            </fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <pattern>${MONITOR_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <logger name="org.springframework">
+        <level value="INFO"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <root>
+        <level value="INFO" />
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="infoAppender"/>
+        <appender-ref ref="errorAppender"/>
+    </root>
+</configuration>
