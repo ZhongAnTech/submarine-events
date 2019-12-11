@@ -22,7 +22,7 @@ spring:
             concurrency: 4 #concurrent consumer count, default is 1, less than or equal to partition count
             max-attempts: 5 #max retry count, default is 3
       function: 
-        definition: restAPIConsume #function to consume message, already implemented stream/handler/EventHandler.java
+        definition: restAPIConsume #function to consume message, already implemented in stream/handler/EventHandler.java
 
 event-adapter-rules:
   rule[0]:
